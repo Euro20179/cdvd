@@ -1,10 +1,13 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
 #include "dvd.h"
 #include "globals.h"
 
-const char* DVD_IMAGE_LOCATION = "assets/logos";
+const char* DVD_IMAGE_LOCATION = "assets/logos/";
 
 void dvd_render(Dvd *dvd, SDL_Renderer *rend){
     if(dvd->initialized == 0){
@@ -25,7 +28,10 @@ Dvd request_dvd_init(int x, int y, int width, int height, const char* file_name)
 }
 
 void dvd_init(Dvd* dvd, SDL_Renderer* rend){
-    dvd->texture = IMG_LoadTexture(rend, dvd->file_name);
+    char buf[strlen(DVD_IMAGE_LOCATION) + strlen(dvd->file_name)];
+    strcpy(buf, DVD_IMAGE_LOCATION);
+    strcat(buf, dvd->file_name);
+    dvd->texture = IMG_LoadTexture(rend, buf);
     dvd->initialized = 1;
 }
 
@@ -57,4 +63,32 @@ void dvd_bounce_x(Dvd* dvd){
 }
 void dvd_bounce_y(Dvd* dvd){
     dvd->yVel *= -1;
+}
+
+void dvd_create_lua_table(Dvd* d, lua_State* L){
+    lua_newtable(L);
+    lua_pushstring(L, "x");
+    lua_pushnumber(L, d->x);
+    lua_settable(L, -3);
+    lua_pushstring(L, "y");
+    lua_pushnumber(L, d->y);
+    lua_settable(L, -3);
+    lua_pushstring(L, "width");
+    lua_pushnumber(L, d->width);
+    lua_settable(L, -3);
+    lua_pushstring(L, "height");
+    lua_pushnumber(L, d->height);
+    lua_settable(L, -3);
+    lua_pushstring(L, "xVel");
+    lua_pushnumber(L, d->xVel);
+    lua_settable(L, -3);
+    lua_pushstring(L, "yVel");
+    lua_pushnumber(L, d->yVel);
+    lua_settable(L, -3);
+    lua_pushstring(L, "file_name");
+    lua_pushstring(L, d->file_name);
+    lua_settable(L, -3);
+    lua_pushstring(L, "id");
+    lua_pushnumber(L, d->id);
+    lua_settable(L, -3);
 }

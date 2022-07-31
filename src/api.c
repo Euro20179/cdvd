@@ -14,35 +14,11 @@ int dvd_exit(lua_State* L){
 }
 
 int dvd_add_dvd(lua_State* L){
-    Dvd d = request_dvd_init(rand() % 50, rand() % 50, NULL, NULL, "assets/logos/DVD_White.png");
+    Dvd d = request_dvd_init(rand() % 50, rand() % 50, NULL, NULL, "DVD_White.png");
     if(insertArray(&dvds, d) == 1){
 	return 2;
     }
-    lua_newtable(L);
-    lua_pushstring(L, "x");
-    lua_pushnumber(L, d.x);
-    lua_settable(L, -3);
-    lua_pushstring(L, "y");
-    lua_pushnumber(L, d.y);
-    lua_settable(L, -3);
-    lua_pushstring(L, "width");
-    lua_pushnumber(L, d.width);
-    lua_settable(L, -3);
-    lua_pushstring(L, "height");
-    lua_pushnumber(L, d.height);
-    lua_settable(L, -3);
-    lua_pushstring(L, "xVel");
-    lua_pushnumber(L, d.xVel);
-    lua_settable(L, -3);
-    lua_pushstring(L, "yVel");
-    lua_pushnumber(L, d.yVel);
-    lua_settable(L, -3);
-    lua_pushstring(L, "file_name");
-    lua_pushstring(L, d.file_name);
-    lua_settable(L, -3);
-    lua_pushstring(L, "id");
-    lua_pushnumber(L, d.id);
-    lua_settable(L, -3);
+    dvd_create_lua_table(&d, L);
     return 1;
 }
 
@@ -51,31 +27,7 @@ int dvd_get_dvds(lua_State* L){
     for(int i = 0; i < dvd_count; i++){
 	Dvd d = dvds.array[i];
 	lua_pushinteger(L, i);
-	lua_newtable(L);
-	lua_pushstring(L, "x");
-	lua_pushnumber(L, d.x);
-	lua_settable(L, -3);
-	lua_pushstring(L, "y");
-	lua_pushnumber(L, d.y);
-	lua_settable(L, -3);
-	lua_pushstring(L, "width");
-	lua_pushnumber(L, d.width);
-	lua_settable(L, -3);
-	lua_pushstring(L, "height");
-	lua_pushnumber(L, d.height);
-	lua_settable(L, -3);
-	lua_pushstring(L, "xVel");
-	lua_pushnumber(L, d.xVel);
-	lua_settable(L, -3);
-	lua_pushstring(L, "yVel");
-	lua_pushnumber(L, d.yVel);
-	lua_settable(L, -3);
-	lua_pushstring(L, "file_name");
-	lua_pushstring(L, d.file_name);
-	lua_settable(L, -3);
-	lua_pushstring(L, "id");
-	lua_pushnumber(L, d.id);
-	lua_settable(L, -3);
+	dvd_create_lua_table(&d, L);
 	lua_settable(L, -3);
     }
     return 1;

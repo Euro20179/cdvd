@@ -1,7 +1,7 @@
 print("starting...")
 
 for i = 0,10,1 do
-    add_dvd()
+    dvd.add()
     print("success" .. i)
 end
 
@@ -18,4 +18,5 @@ function dump(o)
       return tostring(o)
    end
 end
-print(dump(get_dvds()))
+
+print(dump(dvd.get_all()))
