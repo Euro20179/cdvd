@@ -27,7 +27,8 @@ int main(int argc, char ** argv) {
 
     const struct luaL_Reg dvdLib[] = {
 	{ "exit", dvd_exit },
-	{ "add", dvd_add_dvd }
+	{ "add", dvd_add_dvd },
+	{ "get_dvds", dvd_get_dvds }
     };
 
     lua_newtable(L);
