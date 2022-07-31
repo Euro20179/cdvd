@@ -46,7 +46,7 @@ int main(int argc, char ** argv) {
 
     rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
-    if(luaL_dofile(L, "test.lua") == LUA_OK){
+    if(luaL_dofile(L, "config.lua") == LUA_OK){
 	lua_pop(L, lua_gettop(L));
     }
 
