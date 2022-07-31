@@ -20,20 +20,21 @@ SDL_Window* win;
 
 int main(int argc, char ** argv) {
 
+    srand(NULL);
+
     initArray(&dvds, 1);
 
     lua_State *L = luaL_newstate();
     luaL_openlibs(L);
 
-    const struct luaL_Reg dvdLib[] = {
-	{ "exit", dvd_exit },
-	{ "add", dvd_add_dvd },
-	{ "get_dvds", dvd_get_dvds }
-    };
-
-    lua_newtable(L);
-    luaL_setfuncs(L, &dvdLib, 0);
-    lua_setglobal(L, "dvd");
+    lua_pushcfunction(L, dvd_exit);
+    lua_setglobal(L, "dvd_exit");
+    lua_pushcfunction(L, dvd_add_dvd );
+    lua_setglobal(L, "add_dvd");
+    lua_pushcfunction(L, dvd_get_dvds );
+    lua_setglobal(L, "get_dvds");
+    lua_pushcfunction(L, dvd_get_dvd_count );
+    lua_setglobal(L, "get_dvd_count");
 
 
     // Work with lua API

@@ -18,6 +18,7 @@ typedef struct {
     const char* file_name;
     SDL_Texture* texture;
     _Bool initialized;
+    long double id;
 } Dvd;
 /*
     SDL_Surface* surface;

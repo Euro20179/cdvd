@@ -40,6 +40,9 @@ int dvd_add_dvd(lua_State* L){
     lua_pushstring(L, "file_name");
     lua_pushstring(L, d.file_name);
     lua_settable(L, -3);
+    lua_pushstring(L, "id");
+    lua_pushnumber(L, d.id);
+    lua_settable(L, -3);
     return 1;
 }
 
@@ -70,7 +73,15 @@ int dvd_get_dvds(lua_State* L){
 	lua_pushstring(L, "file_name");
 	lua_pushstring(L, d.file_name);
 	lua_settable(L, -3);
+	lua_pushstring(L, "id");
+	lua_pushnumber(L, d.id);
+	lua_settable(L, -3);
 	lua_settable(L, -3);
     }
+    return 1;
+}
+
+int dvd_get_dvd_count(lua_State* L){
+    lua_pushinteger(L, dvd_count);
     return 1;
 }

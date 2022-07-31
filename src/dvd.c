@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include "dvd.h"
@@ -18,7 +19,7 @@ void dvd_render(Dvd *dvd, SDL_Renderer *rend){
 }
 
 Dvd request_dvd_init(int x, int y, int width, int height, const char* file_name){
-    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, file_name, NULL, 0 };
+    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, file_name, NULL, 0, rand() * rand() };
     dvd_count += 1;
     return dvd;
 }
