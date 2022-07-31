@@ -64,7 +64,6 @@ int main(int argc, char ** argv) {
 	SDL_RenderClear(rend);
 	for(int i = 0; i < dvd_count; i++){
 	    if(&dvds.array[i] == NULL) continue;
-	    printf("%d\n", i);
 	    dvd_render(&dvds.array[i], rend);
 	    dvd_move(&dvds.array[i]);
 	    switch(dvd_is_touching_wall(&dvds.array[i], win)){
