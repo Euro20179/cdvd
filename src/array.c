@@ -5,13 +5,13 @@
 
 #include "dvd.h"
 
-void initArray(Array* a, int initialSize){
+void initDvdArray(DvdArray* a, int initialSize){
     a->array = malloc(initialSize * sizeof(Dvd));
     a->used = 0;
     a->len = initialSize;
 }
 
-int insertArray(Array* a, Dvd element) {
+int insertDvdArray(DvdArray* a, Dvd element) {
     if(a->used == a->len){
 	a->len *= 2;
 	void* mem = realloc(a->array, a->len * sizeof(Dvd));
@@ -22,7 +22,7 @@ int insertArray(Array* a, Dvd element) {
     return 0;
 }
 
-void delArray(Array* a){
+void delDvdArray(DvdArray* a){
     free(a->array);
     a->array = NULL;
     a->used = a->len = 0;

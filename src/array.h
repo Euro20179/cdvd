@@ -5,8 +5,8 @@ typedef struct {
     Dvd* array;
     int len;
     int used;
-} Array;
+} DvdArray;
 
-void initArray(Array* a, int initialSize);
-int insertArray(Array* a, Dvd element);
-void delArray(Array* a);
+void initDvdArray(DvdArray* a, int initialSize);
+int insertDvdArray(DvdArray* a, Dvd element);
+void delDvdArray(DvdArray* a);

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <lua.h>
@@ -22,7 +23,7 @@ void dvd_render(Dvd *dvd, SDL_Renderer *rend){
 }
 
 Dvd request_dvd_init(int x, int y, int width, int height, const char* file_name){
-    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, file_name, NULL, 0, rand() * rand() };
+    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, file_name, NULL, 0, rand() };
     dvd_count += 1;
     return dvd;
 }
@@ -91,4 +92,23 @@ void dvd_create_lua_table(Dvd* d, lua_State* L){
     lua_pushstring(L, "id");
     lua_pushnumber(L, d->id);
     lua_settable(L, -3);
+}
+
+void dvd_change_logo(Dvd* dvd, SDL_Renderer* rend, const char* new_logo_file_name){
+    dvd->initialized = 0;
+    char buf[strlen(DVD_IMAGE_LOCATION) + strlen(new_logo_file_name)];
+    strcpy(buf, DVD_IMAGE_LOCATION);
+    strcat(buf, new_logo_file_name);
+    dvd->file_name = new_logo_file_name;
+    dvd->texture = IMG_LoadTexture(rend, buf);
+    dvd->initialized = 1;
+}
+
+Dvd* get_dvd_by_id(int id){
+    for(int i = 0; i < dvd_count; i++){
+	if(dvds.array[i].id == id){
+	    return &dvds.array[i];
+	}
+    }
+    return NULL;
 }

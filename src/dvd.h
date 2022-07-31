@@ -19,7 +19,7 @@ typedef struct {
     const char* file_name;
     SDL_Texture* texture;
     _Bool initialized;
-    long double id;
+    int id;
 } Dvd;
 
 void dvd_render(Dvd* dvd, SDL_Renderer* rend);
@@ -31,3 +31,6 @@ int dvd_is_touching_wall(Dvd* dvd, SDL_Window* win);
 void dvd_bounce_x(Dvd* dvd);
 void dvd_bounce_y(Dvd* dvd);
 void dvd_create_lua_table(Dvd* d, lua_State* L);
+void dvd_change_logo(Dvd* dvd, SDL_Renderer* rend, const char* new_logo_file_name);
+
+Dvd* get_dvd_by_id(int id);

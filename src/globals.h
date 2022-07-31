@@ -6,5 +6,7 @@
 #include "dvd.h"
 
 extern int running;
-extern Array dvds;
+extern DvdArray dvds;
 extern int dvd_count;
+
+extern const char* dvd_file_paths[];

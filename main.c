@@ -8,6 +8,7 @@
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
+#include <time.h>
 
 #include "src/array.h"
 #include "src/dvd.h"
@@ -19,9 +20,9 @@ SDL_Renderer* rend;
 SDL_Window* win;
 
 int main(int argc, char ** argv) {
+    srand(time(NULL));
 
-    srand(NULL);
-    initArray(&dvds, 1);
+    initDvdArray(&dvds, 1);
 
     lua_State *L = luaL_newstate();
     luaL_openlibs(L);
@@ -38,6 +39,9 @@ int main(int argc, char ** argv) {
     lua_settable(L, -3);
     lua_pushstring(L, "count");
     lua_pushcfunction(L, dvd_get_dvd_count );
+    lua_settable(L, -3);
+    lua_pushstring(L, "get_by_id");
+    lua_pushcfunction(L, dvd_get_by_id);
     lua_settable(L, -3);
     lua_setglobal(L, "dvd");
 
@@ -76,9 +80,11 @@ int main(int argc, char ** argv) {
 	    switch(dvd_is_touching_wall(&dvds.array[i], win)){
 		case 1:
 		    dvd_bounce_x(&dvds.array[i]);
+		    dvd_change_logo(&dvds.array[i], rend, dvd_file_paths[rand() % sizeof(dvd_file_paths[0])]);
 		    break;
 		case 2:
 		    dvd_bounce_y(&dvds.array[i]);
+		    dvd_change_logo(&dvds.array[i], rend, "DVD_Blue.png");
 		    break;
 	    }
 	}

@@ -19,4 +19,6 @@ function dump(o)
    end
 end
 
-print(dump(dvd.get_all()))
+local randId = dvd.get_all()[1].id
+
+print(dump(dvd.get_by_id(randId)))
