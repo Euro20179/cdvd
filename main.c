@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_mouse.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_surface.h>
@@ -49,6 +50,8 @@ void create_sdl_module_object(lua_State* L){
     lua_setfield(L, -2, "fps");
     lua_pushcfunction(L, sdl_set_fps);
     lua_setfield(L, -2, "set_fps");
+    lua_pushcfunction(L, sdl_background_color);
+    lua_setfield(L, -2, "background");
     lua_setglobal(L, "sdl");
 }
 
@@ -107,6 +110,7 @@ int main(int argc, char ** argv) {
 			    }
 			    break;
 			}
+
 		    }
 		    break;
 		 }

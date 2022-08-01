@@ -1,3 +1,4 @@
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
 #include <stdlib.h>
 #include <lua.h>
@@ -112,5 +113,17 @@ int sdl_set_fps(lua_State* L){
     lua_getglobal(L, "sdl");
     lua_pushnumber(L, fps);
     lua_setfield(L, -2, "fps");
+    return 1;
+}
+
+int sdl_background_color(lua_State* L){
+    int r = lua_tointeger(L, 1);
+    int g = lua_tointeger(L, 2);
+    int b = lua_tointeger(L, 3);
+    int a = lua_tointeger(L, 4);
+    if(r > 255 || g > 255 || b > 255 || a > 255){
+	return 2;
+    }
+    SDL_SetRenderDrawColor(rend, r, g, b, a);
     return 1;
 }

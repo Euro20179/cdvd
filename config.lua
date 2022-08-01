@@ -9,7 +9,7 @@ end
 print("Added dvds")
 
 function bounce(id, _)
-    dvd.set_logo_by_id(id, "DVD_Red.png")
+    sdl.background(math.random(0, 255), math.random(0, 255), math.random(0, 255), 255)
 end
 
 function dvd_bounce_x(id, _)
@@ -34,8 +34,7 @@ function dump(o)
 end
 
 function on_click(x, y)
-    sdl.set_fps(sdl.fps + 10)
-    print(sdl.fps)
+    --sdl.set_fps(sdl.fps + 10)
     print(x, y)
 end
 
