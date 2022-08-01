@@ -38,6 +38,10 @@ void create_sdl_module_object(lua_State* L){
     lua_setfield(L, -2, "size");
     lua_pushcfunction(L, sdl_resize);
     lua_setfield(L, -2, "resize");
+    lua_pushnumber(L, 500);
+    lua_setfield(L, -2, "width");
+    lua_pushnumber(L, 500);
+    lua_setfield(L, -2, "height");
     lua_setglobal(L, "sdl");
 }
 
@@ -72,6 +76,8 @@ int main(int argc, char ** argv) {
 	    switch(event.type){
 		case SDL_QUIT:
 		    {
+			lua_getglobal(L, "on_exit");
+			lua_pcall(L, 0, 0, 0);
 			running = 0;
 			break;
 		    }
@@ -86,10 +92,20 @@ int main(int argc, char ** argv) {
 		case 1:
 		    dvd_bounce_x(&dvds.array[i]);
 		    dvd_change_logo(&dvds.array[i], rend, dvd_file_paths[rand() % sizeof(dvd_file_paths[0])]);
+
+		    lua_getglobal(L, "dvd_bounce_x");
+		    lua_pushinteger(L, dvds.array[i].id);
+		    dvd_create_lua_table(&dvds.array[i], L);
+		    lua_pcall(L, 2, 0, 0);
 		    break;
 		case 2:
 		    dvd_bounce_y(&dvds.array[i]);
 		    dvd_change_logo(&dvds.array[i], rend, "DVD_Blue.png");
+
+		    lua_getglobal(L, "dvd_bounce_y");
+		    lua_pushinteger(L, dvds.array[i].id);
+		    dvd_create_lua_table(&dvds.array[i], L);
+		    lua_pcall(L, 2, 0, 0);
 		    break;
 	    }
 	}

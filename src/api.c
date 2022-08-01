@@ -79,5 +79,13 @@ int sdl_resize(lua_State* L){
 	newH = curH;
     }
     SDL_SetWindowSize(win, newW, newH);
+
+    //set the values sdl.width and sdl.height
+    lua_getglobal(L, "sdl");
+    lua_pushnumber(L, newW);
+    lua_setfield(L, -2, "width");
+    lua_pushnumber(L, newH);
+    lua_setfield(L, -2, "height");
+
     return 1;
 }
