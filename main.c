@@ -19,29 +19,25 @@
 
 void create_dvd_module_object(lua_State* L){
     lua_newtable(L);
-    lua_pushstring(L, "exit");
     lua_pushcfunction(L, dvd_exit);
-    lua_settable(L, -3);
-    lua_pushstring(L, "add");
+    lua_setfield(L, -2, "exit");
     lua_pushcfunction(L, dvd_add_dvd );
-    lua_settable(L, -3);
-    lua_pushstring(L, "get_all");
+    lua_setfield(L, -2, "add");
     lua_pushcfunction(L, dvd_get_dvds );
-    lua_settable(L, -3);
-    lua_pushstring(L, "count");
+    lua_setfield(L, -2, "get_all");
     lua_pushcfunction(L, dvd_get_dvd_count );
-    lua_settable(L, -3);
-    lua_pushstring(L, "get_by_id");
+    lua_setfield(L, -2, "count");
     lua_pushcfunction(L, dvd_get_by_id);
-    lua_settable(L, -3);
+    lua_setfield(L, -2, "get_by_id");
     lua_setglobal(L, "dvd");
 }
 
 void create_sdl_module_object(lua_State* L){
     lua_newtable(L);
-    lua_pushstring(L, "size");
     lua_pushcfunction(L, sdl_get_window_size);
-    lua_settable(L, -3);
+    lua_setfield(L, -2, "size");
+    lua_pushcfunction(L, sdl_resize);
+    lua_setfield(L, -2, "resize");
     lua_setglobal(L, "sdl");
 }
 

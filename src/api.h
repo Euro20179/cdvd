@@ -11,3 +11,4 @@ int dvd_add_dvd(lua_State* L);
 int dvd_get_by_id(lua_State* L);
 
 int sdl_get_window_size(lua_State* L);
+int sdl_resize(lua_State* L);

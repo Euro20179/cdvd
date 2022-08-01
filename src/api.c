@@ -66,3 +66,18 @@ int sdl_get_window_size(lua_State *L){
     lua_settable(L, -3);
     return 1;
 }
+
+int sdl_resize(lua_State* L){
+    int newW = lua_tointeger(L, 1);
+    int newH = lua_tointeger(L, 2);
+    int curW, curH;
+    SDL_GetWindowSize(win, &curW, &curH);
+    if(newW == 0){
+	newW = curW;
+    }
+    if(newH == 0){
+	newH = curH;
+    }
+    SDL_SetWindowSize(win, newW, newH);
+    return 1;
+}

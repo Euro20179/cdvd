@@ -1,16 +1,15 @@
 print("starting...")
 
+sdl.resize(700, 700);
+
 local size = sdl.size()
 local WIDTH = size.width
 local HEIGHT = size.height
 
-
-print(WIDTH)
-
 for i = 0,10,1 do
     dvd.add(math.random(0, WIDTH - 98), math.random(0, HEIGHT - 43), "DVD_Blue.png")
-    print("success" .. i)
 end
+print("Added dvds")
 
 
 function dump(o)
@@ -25,7 +24,3 @@ function dump(o)
       return tostring(o)
    end
 end
-
-local randId = dvd.get_all()[1].id
-
-print(dump(dvd.get_by_id(randId)))
