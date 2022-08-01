@@ -54,6 +54,19 @@ int dvd_get_by_id(lua_State* L){
     return 1;
 }
 
+int dvd_change_logo_by_id(lua_State* L){
+    int id = lua_tointeger(L, 1);
+    const char* file_path = lua_tostring(L, 2);
+    if(file_path == NULL){
+	return 2;
+    }
+    Dvd* d = get_dvd_by_id(id);
+    if(d == NULL)
+	return 2;
+    dvd_change_logo(d, rend, file_path);
+    return 1;
+}
+
 int sdl_get_window_size(lua_State *L){
     int w, h;
     SDL_GetWindowSize(win, &w, &h);

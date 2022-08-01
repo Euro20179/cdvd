@@ -29,6 +29,8 @@ void create_dvd_module_object(lua_State* L){
     lua_setfield(L, -2, "count");
     lua_pushcfunction(L, dvd_get_by_id);
     lua_setfield(L, -2, "get_by_id");
+    lua_pushcfunction(L, dvd_change_logo_by_id);
+    lua_setfield(L, -2, "set_logo_by_id");
     lua_setglobal(L, "dvd");
 }
 
@@ -86,25 +88,26 @@ int main(int argc, char ** argv) {
 	SDL_RenderClear(rend);
 	for(int i = 0; i < dvd_count; i++){
 	    if(&dvds.array[i] == NULL) continue;
-	    dvd_render(&dvds.array[i], rend);
-	    dvd_move(&dvds.array[i]);
-	    switch(dvd_is_touching_wall(&dvds.array[i], win)){
+	    Dvd* d = &dvds.array[i];
+	    dvd_render(d, rend);
+	    dvd_move(d);
+	    switch(dvd_is_touching_wall(d, win)){
 		case 1:
-		    dvd_bounce_x(&dvds.array[i]);
-		    dvd_change_logo(&dvds.array[i], rend, dvd_file_paths[rand() % sizeof(dvd_file_paths[0])]);
+		    dvd_bounce_x(d);
+		    dvd_change_logo(d, rend, dvd_file_paths[rand() % sizeof(dvd_file_paths[0])]);
 
 		    lua_getglobal(L, "dvd_bounce_x");
-		    lua_pushinteger(L, dvds.array[i].id);
-		    dvd_create_lua_table(&dvds.array[i], L);
+		    lua_pushinteger(L, d->id);
+		    dvd_create_lua_table(d, L);
 		    lua_pcall(L, 2, 0, 0);
 		    break;
 		case 2:
-		    dvd_bounce_y(&dvds.array[i]);
-		    dvd_change_logo(&dvds.array[i], rend, "DVD_Blue.png");
+		    dvd_bounce_y(d);
+		    dvd_change_logo(d, rend, "DVD_Blue.png");
 
 		    lua_getglobal(L, "dvd_bounce_y");
-		    lua_pushinteger(L, dvds.array[i].id);
-		    dvd_create_lua_table(&dvds.array[i], L);
+		    lua_pushinteger(L, d->id);
+		    dvd_create_lua_table(d, L);
 		    lua_pcall(L, 2, 0, 0);
 		    break;
 	    }

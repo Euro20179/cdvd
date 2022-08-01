@@ -7,8 +7,15 @@ for i = 0,1000,1 do
 end
 print("Added dvds")
 
-function dvd_bounce_x(id, data)
-    --print(dump(data))
+function bounce(id, _)
+    dvd.set_logo_by_id(id, "DVD_Red.png")
+end
+
+function dvd_bounce_x(id, _)
+    bounce(id, _)
+end
+function dvd_bounce_y(id, _)
+    bounce(id, _)
 end
 
 
