@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_surface.h>
@@ -44,6 +45,10 @@ void create_sdl_module_object(lua_State* L){
     lua_setfield(L, -2, "width");
     lua_pushnumber(L, 500);
     lua_setfield(L, -2, "height");
+    lua_pushnumber(L, 60);
+    lua_setfield(L, -2, "fps");
+    lua_pushcfunction(L, sdl_set_fps);
+    lua_setfield(L, -2, "set_fps");
     lua_setglobal(L, "sdl");
 }
 
@@ -71,18 +76,40 @@ int main(int argc, char ** argv) {
     if(luaL_dofile(L, "config.lua") == LUA_OK){
 	lua_pop(L, lua_gettop(L));
     }
+    lua_getglobal(L, "sdl");
+    lua_getfield(L, -1, "fps");
+    fps = lua_tointeger(L, -1);
+    if(fps == 0) fps = 60;
 
     while(running == 1){
 	SDL_Event event;
 	while(SDL_PollEvent(&event)){
 	    switch(event.type){
-		case SDL_QUIT:
-		    {
-			lua_getglobal(L, "on_exit");
-			lua_pcall(L, 0, 0, 0);
-			running = 0;
-			break;
+		case SDL_QUIT:{
+		    lua_getglobal(L, "on_exit");
+		    lua_pcall(L, 0, 0, 0);
+		    running = 0;
+		    break;
+		}
+		case SDL_MOUSEBUTTONDOWN:{
+		    int x, y;
+		    Uint32 buttons = SDL_GetMouseState(&x, &y);
+		    switch(buttons){
+			case SDL_BUTTON_LMASK:{
+			    lua_getglobal(L, "on_click");
+			    lua_pushinteger(L, x);
+			    lua_pushinteger(L, y);
+			    lua_pcall(L, 2, 1, 0);
+			    int override = lua_toboolean(L, 1);
+			    if(override == 0){
+				Dvd d = request_dvd_init(x, y, 0, 0, dvd_file_paths[rand() % sizeof(dvd_file_paths[0])]); //I would like to put NULL, NULL instead of 0, 0, but that gives warnings
+				insertDvdArray(&dvds, d);
+			    }
+			    break;
+			}
 		    }
+		    break;
+		 }
 	    }
 	}
 	SDL_RenderClear(rend);
@@ -113,7 +140,7 @@ int main(int argc, char ** argv) {
 	    }
 	}
 	SDL_RenderPresent(rend);
-	SDL_Delay(1000 / 60);
+	SDL_Delay(1000 / fps);
     }
 
     SDL_DestroyRenderer(rend);

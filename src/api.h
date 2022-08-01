@@ -13,3 +13,4 @@ int dvd_change_logo_by_id(lua_State* L);
 
 int sdl_get_window_size(lua_State* L);
 int sdl_resize(lua_State* L);
+int sdl_set_fps(lua_State* L);

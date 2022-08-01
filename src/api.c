@@ -102,3 +102,15 @@ int sdl_resize(lua_State* L){
 
     return 1;
 }
+
+int sdl_set_fps(lua_State* L){
+    int newFps = lua_tointeger(L, 1);
+    if(newFps == 0){
+	return 2;
+    }
+    fps = newFps;
+    lua_getglobal(L, "sdl");
+    lua_pushnumber(L, fps);
+    lua_setfield(L, -2, "fps");
+    return 1;
+}

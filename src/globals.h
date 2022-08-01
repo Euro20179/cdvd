@@ -13,3 +13,5 @@ extern SDL_Renderer* rend;
 extern SDL_Window* win;
 
 extern const char* dvd_file_paths[];
+
+extern int fps;

@@ -2,7 +2,8 @@ print("starting...")
 
 sdl.resize(700, 700);
 
-for i = 0,1000,1 do
+
+for i = 0,100,1 do
     dvd.add(math.random(0, sdl.width - 98), math.random(0, sdl.height - 43), "DVD_Blue.png")
 end
 print("Added dvds")
@@ -31,3 +32,10 @@ function dump(o)
       return tostring(o)
    end
 end
+
+function on_click(x, y)
+    sdl.set_fps(sdl.fps + 10)
+    print(sdl.fps)
+    print(x, y)
+end
+

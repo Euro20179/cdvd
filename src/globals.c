@@ -21,3 +21,6 @@ const char* dvd_file_paths[] = {
 
 SDL_Renderer* rend;
 SDL_Window* win;
+
+
+int fps = 60;
