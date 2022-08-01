@@ -18,3 +18,6 @@ const char* dvd_file_paths[] = {
     "DVD_White.png",
     "DVD_Yellow.png"
 };
+
+SDL_Renderer* rend;
+SDL_Window* win;

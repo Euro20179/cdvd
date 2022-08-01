@@ -1,9 +1,11 @@
+#include <SDL2/SDL_video.h>
 #include <stdlib.h>
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
 #include <SDL2/SDL.h>
 
+#include "api.h"
 #include "dvd.h"
 #include "array.h"
 #include "globals.h"
@@ -14,7 +16,12 @@ int dvd_exit(lua_State* L){
 }
 
 int dvd_add_dvd(lua_State* L){
-    Dvd d = request_dvd_init(rand() % 50, rand() % 50, NULL, NULL, "DVD_White.png");
+    int x = lua_tointeger(L, 1);
+    int y = lua_tointeger(L, 2);
+    const char* file_path = lua_tostring(L, 3);
+    if(x == -1) x = rand() % 50;
+    if(y == -1) y = rand() % 50;
+    Dvd d = request_dvd_init(x, y, 0, 0, file_path ? file_path : "DVD_White.png"); //I would like to put NULL, NULL instead of 0, 0, but that gives warnings
     if(insertDvdArray(&dvds, d) == 1){
 	return 2;
     }
@@ -44,5 +51,18 @@ int dvd_get_by_id(lua_State* L){
     if(d == NULL)
 	return 2;
     dvd_create_lua_table(d, L);
+    return 1;
+}
+
+int sdl_get_window_size(lua_State *L){
+    int w, h;
+    SDL_GetWindowSize(win, &w, &h);
+    lua_newtable(L);
+    lua_pushstring(L, "width");
+    lua_pushnumber(L, w);
+    lua_settable(L, -3);
+    lua_pushstring(L, "height");
+    lua_pushnumber(L, h);
+    lua_settable(L, -3);
     return 1;
 }

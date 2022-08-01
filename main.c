@@ -16,17 +16,8 @@
 #include "src/globals.h"
 
 //int multiplication(lua_State* L);
-SDL_Renderer* rend;
-SDL_Window* win;
 
-int main(int argc, char ** argv) {
-    srand(time(NULL));
-
-    initDvdArray(&dvds, 1);
-
-    lua_State *L = luaL_newstate();
-    luaL_openlibs(L);
-
+void create_dvd_module_object(lua_State* L){
     lua_newtable(L);
     lua_pushstring(L, "exit");
     lua_pushcfunction(L, dvd_exit);
@@ -44,10 +35,28 @@ int main(int argc, char ** argv) {
     lua_pushcfunction(L, dvd_get_by_id);
     lua_settable(L, -3);
     lua_setglobal(L, "dvd");
+}
 
+void create_sdl_module_object(lua_State* L){
+    lua_newtable(L);
+    lua_pushstring(L, "size");
+    lua_pushcfunction(L, sdl_get_window_size);
+    lua_settable(L, -3);
+    lua_setglobal(L, "sdl");
+}
+
+int main(int argc, char ** argv) {
+    srand(time(NULL));
+
+    initDvdArray(&dvds, 1);
+
+    lua_State *L = luaL_newstate();
+    luaL_openlibs(L);
+
+    create_dvd_module_object(L);
+    create_sdl_module_object(L);
 
     // Work with lua API
-
 
     if(SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 	printf("Error initializing SDL: %s\n", SDL_GetError());
