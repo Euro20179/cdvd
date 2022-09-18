@@ -57,14 +57,59 @@ int dvd_get_by_id(lua_State* L){
 
 int dvd_change_logo_by_id(lua_State* L){
     int id = lua_tointeger(L, 1);
-    const char* file_path = lua_tostring(L, 2);
-    if(file_path == NULL){
-	return 2;
-    }
     Dvd* d = get_dvd_by_id(id);
     if(d == NULL)
-	return 2;
-    dvd_change_logo(d, rend, file_path);
+        return 2;
+    const char* file_path = lua_tostring(L, 2);
+    if(file_path == NULL){
+        dvd_change_logo(d, rend, dvd_file_paths[rand() % sizeof(dvd_file_paths[0])]);
+    }
+    else{
+        dvd_change_logo(d, rend, file_path);
+    }
+    return 1;
+}
+
+int dvd_change_x_by_id(lua_State* L){
+    int id = lua_tointeger(L, 1);
+    Dvd* d = get_dvd_by_id(id);
+    if(d == NULL){
+        return 2;
+    }
+    int x = lua_tointeger(L, 2);
+    if(x == NULL)
+        x = 0;
+    d->x = x;
+    return 1;
+}
+
+int dvd_change_y_by_id(lua_State* L){
+    int id = lua_tointeger(L, 1);
+    Dvd* d = get_dvd_by_id(id);
+    if(d == NULL){
+        return 2;
+    }
+    int y = lua_tointeger(L, 2);
+    if(y == NULL)
+        y = 0;
+    d->y = y;
+    return 1;
+}
+
+int dvd_set_pos_by_id(lua_State* L){
+    int id = lua_tointeger(L, 1);
+    Dvd* d = get_dvd_by_id(id);
+    if(d == NULL){
+        return 2;
+    }
+    int y = lua_tointeger(L, 2);
+    if(y == NULL)
+        y = 0;
+    d->y = y;
+    int x = lua_tointeger(L, 2);
+    if(x == NULL)
+        x = 0;
+    d->x = x;
     return 1;
 }
 
@@ -87,10 +132,10 @@ int sdl_resize(lua_State* L){
     int curW, curH;
     SDL_GetWindowSize(win, &curW, &curH);
     if(newW == 0){
-	newW = curW;
+        newW = curW;
     }
     if(newH == 0){
-	newH = curH;
+        newH = curH;
     }
     SDL_SetWindowSize(win, newW, newH);
 
@@ -100,6 +145,9 @@ int sdl_resize(lua_State* L){
     lua_setfield(L, -2, "width");
     lua_pushnumber(L, newH);
     lua_setfield(L, -2, "height");
+
+    WIDTH = newW;
+    HEIGHT = newH;
 
     return 1;
 }
@@ -125,5 +173,17 @@ int sdl_background_color(lua_State* L){
 	return 2;
     }
     SDL_SetRenderDrawColor(rend, r, g, b, a);
+    return 1;
+}
+
+int this_register_on_click(lua_State* L){
+
+    insertIntArray(&on_click_callbacks, luaL_ref(L, LUA_REGISTRYINDEX));
+    return 1;
+}
+
+int this_register_on_right_click(lua_State* L){
+
+    insertIntArray(&on_right_click_callbacks, luaL_ref(L, LUA_REGISTRYINDEX));
     return 1;
 }

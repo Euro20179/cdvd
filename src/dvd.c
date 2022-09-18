@@ -59,6 +59,15 @@ int dvd_is_touching_wall(Dvd* dvd, SDL_Window* win){
     return 0;
 }
 
+int dvd_is_in_wall(Dvd* dvd, SDL_Window* win){
+    int w, h;
+    SDL_GetWindowSize(win, &w, &h);
+    return
+        (dvd->x <= 0 - dvd->width / 4) || (dvd->x + dvd->width >= w + dvd->width / 4) ||
+        (dvd->y <= 0 - dvd->height / 4) || (dvd->y + dvd->height >= h + dvd->height / 4);
+
+}
+
 void dvd_bounce_x(Dvd* dvd){
     dvd->xVel *= -1;
 }

@@ -28,6 +28,7 @@ void dvd_init(Dvd* dvd, SDL_Renderer* rend);
 void dvd_goto(Dvd* dvd, int x, int y);
 void dvd_move(Dvd* dvd);
 int dvd_is_touching_wall(Dvd* dvd, SDL_Window* win);
+int dvd_is_in_wall(Dvd* dvd, SDL_Window* win);
 void dvd_bounce_x(Dvd* dvd);
 void dvd_bounce_y(Dvd* dvd);
 void dvd_create_lua_table(Dvd* d, lua_State* L);
