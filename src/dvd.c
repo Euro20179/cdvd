@@ -134,6 +134,7 @@ void dvd_create_lua_table(Dvd* d, lua_State* L){
     lua_settable(L, -3);
     lua_pushstring(L, "bounces");
     lua_pushinteger(L, d->bounces);
+    lua_settable(L, -3);
     lua_pushstring(L, "render_fields");
     lua_pushinteger(L, d->infoToRender);
     lua_settable(L, -3);

@@ -154,6 +154,26 @@ int dvd_set_moving_by_id(lua_State *L){
     return 1;
 }
 
+int dvd_change_xvel_by_id(lua_State* L){
+    int id = lua_tointeger(L, 1);
+    Dvd* d = get_dvd_by_id(id);
+    if(d == NULL)
+        return 2;
+    int amount = lua_tointeger(L, 2);
+    d->xVel += amount;
+    return 1;
+}
+
+int dvd_change_yvel_by_id(lua_State* L){
+    int id = lua_tointeger(L, 1);
+    Dvd* d = get_dvd_by_id(id);
+    if(d == NULL)
+        return 2;
+    int amount = lua_tointeger(L, 2);
+    d->yVel += amount;
+    return 1;
+}
+
 int dvd_get_all_dvds(lua_State* L){
     lua_newtable(L);
     for(int i = 0; i < dvds.len; i++){

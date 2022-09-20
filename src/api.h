@@ -15,6 +15,8 @@ int dvd_change_y_by_id(lua_State* L);
 int dvd_set_pos_by_id(lua_State* L);
 int dvd_bounce_by_id(lua_State* L);
 int dvd_set_moving_by_id(lua_State* L);
+int dvd_change_xvel_by_id(lua_State* L);
+int dvd_change_yvel_by_id(lua_State* L);
 int dvd_get_all_dvds(lua_State* L);
 int dvd_pop(lua_State* L);
 
