@@ -135,7 +135,8 @@ int main(int argc, char ** argv) {
     rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
     TTF_Init();
-    TTF_Font* mainInfoFont = TTF_OpenFont("/usr/share/fonts/ubuntu/Ubuntu-M.ttf", 15);
+    FC_Font* mainInfoFont = FC_CreateFont();
+    FC_LoadFont(mainInfoFont, rend, "/usr/share/fonts/ubuntu/Ubuntu-M.ttf", 15, FC_MakeColor(255, 255, 255, 255), TTF_STYLE_NORMAL);
 
     FC_Font* dvdInfoFont = FC_CreateFont();
     FC_LoadFont(dvdInfoFont, rend, "/usr/share/fonts/TTF/Arial.TTF", 10, FC_MakeColor(255, 255, 255, 255), TTF_STYLE_NORMAL);
@@ -193,13 +194,6 @@ int main(int argc, char ** argv) {
     while(running == 1){
         SDL_Event event;
 
-        //hopefuly no one has a good enough computer that can render a googol dvds :weary:
-        char str[100];
-        sprintf(str, "%d", dvds.used);
-
-        infoSurface = TTF_RenderText_Solid(mainInfoFont, str, White);
-        info = SDL_CreateTextureFromSurface(rend, infoSurface);
-
         while(SDL_PollEvent(&event)){
             switch(event.type){
                 case SDL_QUIT:{
@@ -252,6 +246,7 @@ int main(int argc, char ** argv) {
 
         for(int i = 0; i < dvds.used; i++){
             if(&dvds.array[i] == NULL) continue;
+            if(dvds.array[i].initialized == 0) dvd_init(&dvds.array[i], rend);
 
             Dvd* d = &dvds.array[i];
             dvd_render(d, rend);
@@ -291,7 +286,7 @@ int main(int argc, char ** argv) {
             }
         }
 
-        TTF_SizeText(mainInfoFont, str, &message_rect.w, &message_rect.h);
+        FC_Draw(mainInfoFont, rend, 0, 0, "%d", dvds.used);
         SDL_RenderCopy(rend, info, NULL, &message_rect);
         SDL_RenderPresent(rend);
         SDL_Delay(1000 / fps);
