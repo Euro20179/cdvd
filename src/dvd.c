@@ -119,7 +119,7 @@ void dvd_change_logo(Dvd* dvd, SDL_Renderer* rend, const char* new_logo_file_nam
 }
 
 Dvd* get_dvd_by_id(int id){
-    for(int i = 0; i < dvd_count; i++){
+    for(int i = 0; i < dvds.used; i++){
 	if(dvds.array[i].id == id){
 	    return &dvds.array[i];
 	}

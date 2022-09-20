@@ -17,6 +17,13 @@ int dvd_exit(lua_State* L){
     return 1;
 }
 
+int dvd_pop(lua_State* L){
+    if(dvds.len > 0){
+        popDvdArrayItem(&dvds);
+    }
+    return 1;
+}
+
 int dvd_add_dvd(lua_State* L){
     int x = lua_tointeger(L, 1);
     int y = lua_tointeger(L, 2);
@@ -33,7 +40,7 @@ int dvd_add_dvd(lua_State* L){
 
 int dvd_get_dvds(lua_State* L){
     lua_newtable(L);
-    for(int i = 0; i < dvd_count; i++){
+    for(int i = 0; i < dvds.used; i++){
 	Dvd d = dvds.array[i];
 	lua_pushinteger(L, i);
 	dvd_create_lua_table(&d, L);
@@ -43,7 +50,7 @@ int dvd_get_dvds(lua_State* L){
 }
 
 int dvd_get_dvd_count(lua_State* L){
-    lua_pushinteger(L, dvd_count);
+    lua_pushinteger(L, dvds.used);
     return 1;
 }
 
@@ -235,5 +242,10 @@ int this_register_on_right_click(lua_State* L){
 
 int this_register_on_bounce(lua_State *L){
     insertIntArray(&on_bounce_callbacks, luaL_ref(L, LUA_REGISTRYINDEX));
+    return 1;
+}
+
+int this_register_on_middle_click(lua_State* L){
+    insertIntArray(&on_middle_click_callbacks, luaL_ref(L, LUA_REGISTRYINDEX));
     return 1;
 }

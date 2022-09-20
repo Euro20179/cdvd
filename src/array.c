@@ -30,6 +30,19 @@ int insertDvdArray(DvdArray *a, Dvd element) {
   return 0;
 }
 
+void popDvdArrayItem(DvdArray* a){
+    a->used--;
+    if(a->used < a->len){
+        a->len = a->used;
+    }
+    void* mem = realloc(a->array, a->len * sizeof(Dvd));
+    if(!mem){
+        free(mem);
+        return 1;
+    }
+    a->array = mem;
+}
+
 void delDvdArray(DvdArray *a) {
   free(a->array);
   a->array = NULL;

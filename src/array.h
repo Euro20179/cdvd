@@ -8,6 +8,7 @@ typedef struct {
 } DvdArray;
 
 void initDvdArray(DvdArray* a, int initialSize);
+void popDvdArrayItem(DvdArray* a);
 int insertDvdArray(DvdArray* a, Dvd element);
 void delDvdArray(DvdArray* a);
 

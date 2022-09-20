@@ -32,6 +32,8 @@ void create_dvd_module_object(lua_State* L){
     lua_newtable(L);
     lua_pushcfunction(L, dvd_exit);
     lua_setfield(L, -2, "exit");
+    lua_pushcfunction(L, dvd_pop);
+    lua_setfield(L, -2, "pop");
     lua_pushcfunction(L, dvd_add_dvd );
     lua_setfield(L, -2, "add");
     lua_pushcfunction(L, dvd_get_dvds );
@@ -82,6 +84,8 @@ void create_this_module_object(lua_State* L){
     lua_setfield(L, -2, "register_on_click");
     lua_pushcfunction(L, this_register_on_right_click);
     lua_setfield(L, -2, "register_on_right_click");
+    lua_pushcfunction(L, this_register_on_middle_click);
+    lua_setfield(L, -2, "register_on_middle_click");
     lua_pushcfunction(L, this_register_on_bounce);
     lua_setfield(L, -2, "register_on_bounce");
     lua_setglobal(L, "this");
@@ -95,6 +99,7 @@ int main(int argc, char ** argv) {
     initIntArray(&on_click_callbacks, 0);
     initIntArray(&on_right_click_callbacks, 0);
     initIntArray(&on_bounce_callbacks, 0);
+    initIntArray(&on_middle_click_callbacks, 0);
 
     lua_State *L = luaL_newstate();
     luaL_openlibs(L);
@@ -171,7 +176,7 @@ int main(int argc, char ** argv) {
 
         //hopefuly no one has a good enough computer that can render a googol dvds :weary:
         char str[100];
-        sprintf(str, "%d", dvd_count);
+        sprintf(str, "%d", dvds.used);
 
         infoSurface = TTF_RenderText_Solid(font, str, White);
         info = SDL_CreateTextureFromSurface(rend, infoSurface);
@@ -190,7 +195,7 @@ int main(int argc, char ** argv) {
                     Uint32 buttons = SDL_GetMouseState(&x, &y);
                     switch(buttons){
                         case SDL_BUTTON_LMASK:{
-                            for(int i = 0; i < on_click_callbacks.len; i++){
+                            for(int i = 0; i < on_click_callbacks.used; i++){
                                 lua_rawgeti(L, LUA_REGISTRYINDEX, on_click_callbacks.array[i]);
                                 lua_pushinteger(L, x);
                                 lua_pushinteger(L, y);
@@ -199,8 +204,17 @@ int main(int argc, char ** argv) {
                             break;
                         }
                         case SDL_BUTTON_RMASK: {
-                            for(int i = 0; i < on_right_click_callbacks.len; i++){
+                            for(int i = 0; i < on_right_click_callbacks.used; i++){
                                 lua_rawgeti(L, LUA_REGISTRYINDEX, on_right_click_callbacks.array[i]);
+                                lua_pushinteger(L, x);
+                                lua_pushinteger(L, y);
+                                lua_pcall(L, 2, 1, 0);
+                            }
+                            break;
+                        }
+                        case SDL_BUTTON_MIDDLE: {
+                            for(int i = 0; i < on_right_click_callbacks.used; i++){
+                                lua_rawgeti(L, LUA_REGISTRYINDEX, on_middle_click_callbacks.array[i]);
                                 lua_pushinteger(L, x);
                                 lua_pushinteger(L, y);
                                 lua_pcall(L, 2, 1, 0);
@@ -217,7 +231,7 @@ int main(int argc, char ** argv) {
 
 
 
-        for(int i = 0; i < dvd_count; i++){
+        for(int i = 0; i < dvds.used; i++){
             if(&dvds.array[i] == NULL) continue;
 
             Dvd* d = &dvds.array[i];
@@ -228,7 +242,7 @@ int main(int argc, char ** argv) {
                 case 1:
                     d->bounces++;
 
-                    for(int i = 0; i < on_bounce_callbacks.len; i++){
+                    for(int i = 0; i < on_bounce_callbacks.used; i++){
                         lua_rawgeti(L, LUA_REGISTRYINDEX, on_bounce_callbacks.array[i]);
                         lua_pushstring(L, "x");
                         lua_pushinteger(L, d->id);
@@ -241,7 +255,7 @@ int main(int argc, char ** argv) {
                 case 2:
                     d->bounces++;
 
-                    for(int i = 0; i < on_bounce_callbacks.len; i++){
+                    for(int i = 0; i < on_bounce_callbacks.used; i++){
                         lua_rawgeti(L, LUA_REGISTRYINDEX, on_bounce_callbacks.array[i]);
                         lua_pushstring(L, "y");
                         lua_pushinteger(L, d->id);
