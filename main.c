@@ -50,6 +50,8 @@ void create_dvd_module_object(lua_State* L){
     lua_setfield(L, -2, "bounce_by_id");
     lua_pushcfunction(L, dvd_set_pos_by_id);
     lua_setfield(L, -2, "set_pos_by_id");
+    lua_pushcfunction(L, dvd_set_moving_by_id);
+    lua_setfield(L, -2, "set_moving_by_id");
     lua_setglobal(L, "dvd");
 }
 

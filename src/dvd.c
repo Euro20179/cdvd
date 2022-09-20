@@ -23,7 +23,7 @@ void dvd_render(Dvd *dvd, SDL_Renderer *rend){
 }
 
 Dvd request_dvd_init(int x, int y, int width, int height, const char* file_name){
-    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, 0, file_name, NULL, 0, rand() };
+    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, 0, 1, file_name, NULL, 0, rand() };
     dvd_count += 1;
     return dvd;
 }
@@ -42,8 +42,10 @@ void dvd_goto(Dvd* dvd, int x, int y){
 }
 
 void dvd_move(Dvd* dvd){
-    dvd->x += dvd->xVel;
-    dvd->y += dvd->yVel;
+    if(dvd->canMove){
+        dvd->x += dvd->xVel;
+        dvd->y += dvd->yVel;
+    }
 }
 
 //0 == no touching

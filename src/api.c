@@ -135,6 +135,16 @@ int dvd_set_pos_by_id(lua_State* L){
     return 1;
 }
 
+int dvd_set_moving_by_id(lua_State *L){
+    int id = lua_tointeger(L, 1);
+    Dvd* d = get_dvd_by_id(id);
+    if(d == NULL)
+        return 2;
+    int can_move = lua_toboolean(L, 2);
+    d->canMove = can_move;
+    return 1;
+}
+
 int sdl_get_window_size(lua_State *L){
     int w, h;
     SDL_GetWindowSize(win, &w, &h);
