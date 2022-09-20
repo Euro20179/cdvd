@@ -1,5 +1,6 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_video.h>
+#include <string.h>
 #include <stdlib.h>
 #include <lua.h>
 #include <lualib.h>
@@ -96,6 +97,27 @@ int dvd_change_y_by_id(lua_State* L){
     return 1;
 }
 
+int dvd_bounce_by_id(lua_State *L){
+    int id =  lua_tointeger(L, 1);
+    Dvd* d = get_dvd_by_id(id);
+    if(d == NULL)
+        return 2;
+    const char* axis = lua_tostring(L, 2);
+    if(axis == NULL)
+        return 2;
+    if(strcmp(axis, "x") == 0){
+        dvd_bounce_x(d);
+    }
+    else if(strcmp(axis, "y") == 0){
+        dvd_bounce_y(d);
+    }
+    else if(strcmp(axis, "xy") == 0){
+        dvd_bounce_y(d);
+        dvd_bounce_x(d);
+    }
+    return 1;
+}
+
 int dvd_set_pos_by_id(lua_State* L){
     int id = lua_tointeger(L, 1);
     Dvd* d = get_dvd_by_id(id);
@@ -185,5 +207,10 @@ int this_register_on_click(lua_State* L){
 int this_register_on_right_click(lua_State* L){
 
     insertIntArray(&on_right_click_callbacks, luaL_ref(L, LUA_REGISTRYINDEX));
+    return 1;
+}
+
+int this_register_on_bounce(lua_State *L){
+    insertIntArray(&on_bounce_callbacks, luaL_ref(L, LUA_REGISTRYINDEX));
     return 1;
 }

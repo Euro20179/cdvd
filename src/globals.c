@@ -9,6 +9,7 @@ int running = 1;
 DvdArray dvds;
 IntArray on_click_callbacks;
 IntArray on_right_click_callbacks;
+IntArray on_bounce_callbacks;
 int dvd_count = 0;
 
 const char* dvd_file_paths[] = {

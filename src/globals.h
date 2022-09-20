@@ -11,6 +11,7 @@
 
 extern IntArray on_click_callbacks;
 extern IntArray on_right_click_callbacks;
+extern IntArray on_bounce_callbacks;
 
 extern int running;
 extern DvdArray dvds;

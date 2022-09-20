@@ -23,7 +23,7 @@ void dvd_render(Dvd *dvd, SDL_Renderer *rend){
 }
 
 Dvd request_dvd_init(int x, int y, int width, int height, const char* file_name){
-    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, file_name, NULL, 0, rand() };
+    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, 0, file_name, NULL, 0, rand() };
     dvd_count += 1;
     return dvd;
 }
@@ -100,6 +100,9 @@ void dvd_create_lua_table(Dvd* d, lua_State* L){
     lua_settable(L, -3);
     lua_pushstring(L, "id");
     lua_pushnumber(L, d->id);
+    lua_settable(L, -3);
+    lua_pushstring(L, "bounces");
+    lua_pushinteger(L, d->bounces);
     lua_settable(L, -3);
 }
 

@@ -46,6 +46,8 @@ void create_dvd_module_object(lua_State* L){
     lua_setfield(L, -2, "change_x_by_id");
     lua_pushcfunction(L, dvd_change_y_by_id);
     lua_setfield(L, -2, "change_y_by_id");
+    lua_pushcfunction(L, dvd_bounce_by_id);
+    lua_setfield(L, -2, "bounce_by_id");
     lua_pushcfunction(L, dvd_set_pos_by_id);
     lua_setfield(L, -2, "set_pos_by_id");
     lua_setglobal(L, "dvd");
@@ -76,6 +78,8 @@ void create_this_module_object(lua_State* L){
     lua_setfield(L, -2, "register_on_click");
     lua_pushcfunction(L, this_register_on_right_click);
     lua_setfield(L, -2, "register_on_right_click");
+    lua_pushcfunction(L, this_register_on_bounce);
+    lua_setfield(L, -2, "register_on_bounce");
     lua_setglobal(L, "this");
 }
 
@@ -86,6 +90,7 @@ int main(int argc, char ** argv) {
     initDvdArray(&dvds, 0);
     initIntArray(&on_click_callbacks, 0);
     initIntArray(&on_right_click_callbacks, 0);
+    initIntArray(&on_bounce_callbacks, 0);
 
     lua_State *L = luaL_newstate();
     luaL_openlibs(L);
@@ -181,7 +186,6 @@ int main(int argc, char ** argv) {
                     Uint32 buttons = SDL_GetMouseState(&x, &y);
                     switch(buttons){
                         case SDL_BUTTON_LMASK:{
-                            int override = 0;
                             for(int i = 0; i < on_click_callbacks.len; i++){
                                 lua_rawgeti(L, LUA_REGISTRYINDEX, on_click_callbacks.array[i]);
                                 lua_pushinteger(L, x);
@@ -218,23 +222,29 @@ int main(int argc, char ** argv) {
 
             switch(dvd_is_touching_wall(d, win)){
                 case 1:
-                    dvd_bounce_x(d);
-                    dvd_change_logo(d, rend, dvd_file_paths[rand() % sizeof(dvd_file_paths[0])]);
+                    d->bounces++;
 
-                    lua_getglobal(L, "dvd_bounce_x");
-                    lua_pushinteger(L, d->id);
-                    dvd_create_lua_table(d, L);
-                    lua_pcall(L, 2, 0, 0);
+                    for(int i = 0; i < on_bounce_callbacks.len; i++){
+                        lua_rawgeti(L, LUA_REGISTRYINDEX, on_bounce_callbacks.array[i]);
+                        lua_pushstring(L, "x");
+                        lua_pushinteger(L, d->id);
+                        dvd_create_lua_table(d, L);
+                        lua_pcall(L, 3, 0, 0);
+                    }
+
                     break;
 
                 case 2:
-                    dvd_bounce_y(d);
-                    dvd_change_logo(d, rend, dvd_file_paths[rand() % sizeof(dvd_file_paths[0])]);
+                    d->bounces++;
 
-                    lua_getglobal(L, "dvd_bounce_y");
-                    lua_pushinteger(L, d->id);
-                    dvd_create_lua_table(d, L);
-                    lua_pcall(L, 2, 0, 0);
+                    for(int i = 0; i < on_bounce_callbacks.len; i++){
+                        lua_rawgeti(L, LUA_REGISTRYINDEX, on_bounce_callbacks.array[i]);
+                        lua_pushstring(L, "y");
+                        lua_pushinteger(L, d->id);
+                        dvd_create_lua_table(d, L);
+                        lua_pcall(L, 3, 0, 0);
+                    }
+
                     break;
             }
             if(dvd_is_in_wall(d, win)){

@@ -16,6 +16,7 @@ typedef struct {
     int height;
     double xVel;
     double yVel;
+    int bounces;
     const char* file_name;
     SDL_Texture* texture;
     _Bool initialized;
