@@ -145,6 +145,19 @@ int dvd_set_moving_by_id(lua_State *L){
     return 1;
 }
 
+int dvd_get_all_dvds(lua_State* L){
+    lua_newtable(L);
+    for(int i = 0; i < dvds.len; i++){
+        if(dvds.array[i].initialized == 0){
+            continue;
+        }
+        lua_pushnumber(L, i + 1);
+        dvd_create_lua_table(&(dvds.array[i]), L);
+        lua_settable(L, -3);
+    }
+    return 1;
+}
+
 int sdl_get_window_size(lua_State *L){
     int w, h;
     SDL_GetWindowSize(win, &w, &h);
