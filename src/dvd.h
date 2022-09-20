@@ -1,5 +1,6 @@
 #pragma	once
 
+#include "fc.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -11,6 +12,7 @@
 #define DVD_RENDER_POSITION 1
 #define DVD_RENDER_VELOCITY 2
 #define DVD_RENDER_BOUNCE_COUNT 4
+#define DVD_RENDER_ID 8
 
 extern const char* DVD_IMAGE_LOCATION;
 
@@ -31,7 +33,7 @@ typedef struct {
 } Dvd;
 
 void dvd_render(Dvd* dvd, SDL_Renderer* rend);
-void dvd_render_text(Dvd* dvd, SDL_Renderer* rend, TTF_Font* font);
+void dvd_render_text(Dvd* dvd, SDL_Renderer* rend, FC_Font* font);
 Dvd request_dvd_init(int x, int y, int width, int height, const char* file_name);
 void dvd_init(Dvd* dvd, SDL_Renderer* rend);
 void dvd_goto(Dvd* dvd, int x, int y);

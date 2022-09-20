@@ -7,6 +7,7 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
+#include "fc.h"
 #include "array.h"
 #include "dvd.h"
 #include "globals.h"
@@ -26,33 +27,25 @@ void dvd_render(Dvd *dvd, SDL_Renderer *rend){
     SDL_RenderCopy(rend, dvd->texture, NULL, &dest);
 }
 
-void dvd_render_text(Dvd* d, SDL_Renderer* rend, TTF_Font* font){
+void dvd_render_text(Dvd* d, SDL_Renderer* rend, FC_Font* font){
     int yOffset = 0;
     SDL_Color white = {255, 255, 255};
     if(d->infoToRender & DVD_RENDER_POSITION){
-        char str[100];
-        sprintf(str, "(%.01f , %.01f )", d->x, d->y);
-
-        SDL_Rect r = renderText(rend, font, str, white, d->x + d->width, d->y + yOffset);
-
-        yOffset += r.h;
+        FC_Draw(font, rend, d->x + d->width, d->y + yOffset, "(%.01f, %.01f)", d->x, d->y);
     }
     if(d->infoToRender & DVD_RENDER_VELOCITY){
-        char str[100];
-        sprintf(str, "(%f, %f)px/f", d->xVel, d->yVel);
-        SDL_Rect r = renderText(rend, font, str, white, d->x + d->width, d->y + yOffset);
-        yOffset += r.h;
+        FC_Draw(font, rend, d->x + d->width, d->y + yOffset, "(%f, %f)", d->xVel, d->yVel);
     }
     if(d->infoToRender & DVD_RENDER_BOUNCE_COUNT){
-        char str[100];
-        sprintf(str, "b: %d", d->bounces);
-        SDL_Rect r = renderText(rend, font, str, white, d->x + d->width, d->y + yOffset);
-        yOffset += r.h;
+        FC_Draw(font, rend, d->x + d->width, d->y + yOffset, "b: %d", d->bounces);
+    }
+    if(d->infoToRender & DVD_RENDER_ID){
+        FC_Draw(font, rend, d->x + d->width, d->y + yOffset, "#%d", d->id);
     }
 }
 
 Dvd request_dvd_init(int x, int y, int width, int height, const char* file_name){
-    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, 0, 1, DVD_RENDER_POSITION | DVD_RENDER_BOUNCE_COUNT | DVD_RENDER_VELOCITY, file_name, NULL, 0, rand() };
+    Dvd dvd = { x, y, DVD_WIDTH, DVD_HEIGHT, 1, 0.5, 0, 1, DVD_RENDER_POSITION, file_name, NULL, 0, rand() };
     dvd_count += 1;
     return dvd;
 }

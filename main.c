@@ -20,6 +20,7 @@
 #include "src/array.h"
 #include "src/dvd.h"
 #include "src/api.h"
+#include "src/fc.h"
 #include "src/globals.h"
 #include "src/config.h"
 
@@ -65,7 +66,9 @@ void create_dvd_module_object(lua_State* L){
     lua_pushinteger(L, DVD_RENDER_BOUNCE_COUNT);
     lua_setfield(L, -2, "RENDER_BOUNCE_COUNT");
     lua_pushinteger(L, DVD_RENDER_POSITION);
-    lua_setfield(L, -2, "DVD_RENDER_POSITION");
+    lua_setfield(L, -2, "RENDER_POSITION");
+    lua_pushinteger(L, DVD_RENDER_ID);
+    lua_setfield(L, -2, "RENDER_ID");
     lua_setglobal(L, "dvd");
 }
 
@@ -133,7 +136,10 @@ int main(int argc, char ** argv) {
 
     TTF_Init();
     TTF_Font* mainInfoFont = TTF_OpenFont("/usr/share/fonts/ubuntu/Ubuntu-M.ttf", 15);
-    TTF_Font* dvdInfoFont = TTF_OpenFont("/usr/share/fonts/ubuntu/Ubuntu-M.ttf", 10);
+
+    FC_Font* dvdInfoFont = FC_CreateFont();
+    FC_LoadFont(dvdInfoFont, rend, "/usr/share/fonts/TTF/Arial.TTF", 10, FC_MakeColor(255, 255, 255, 255), TTF_STYLE_NORMAL);
+
     if(!mainInfoFont){
         printf("%s\n", "Font not found");
         return 1;
