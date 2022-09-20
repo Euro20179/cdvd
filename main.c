@@ -56,6 +56,12 @@ void create_dvd_module_object(lua_State* L){
     lua_setfield(L, -2, "set_moving_by_id");
     lua_pushcfunction(L, dvd_get_all_dvds);
     lua_setfield(L, -2, "get_all_dvds");
+    lua_pushinteger(L, DVD_RENDER_VELOCITY);
+    lua_setfield(L, -2, "RENDER_VELOCITY");
+    lua_pushinteger(L, DVD_RENDER_BOUNCE_COUNT);
+    lua_setfield(L, -2, "RENDER_BOUNCE_COUNT");
+    lua_pushinteger(L, DVD_RENDER_POSITION);
+    lua_setfield(L, -2, "DVD_RENDER_POSITION");
     lua_setglobal(L, "dvd");
 }
 
@@ -239,22 +245,8 @@ int main(int argc, char ** argv) {
 
             Dvd* d = &dvds.array[i];
             dvd_render(d, rend);
+            dvd_render_text(d, rend, dvdInfoFont);
             dvd_move(d);
-
-            char str[100];
-            sprintf(str, "(%.01f , %.01f )", d->x, d->y);
-
-            SDL_Surface* infoSurface;
-            SDL_Texture* info;
-            infoSurface = TTF_RenderText_Solid(dvdInfoFont, str, White);
-            info = SDL_CreateTextureFromSurface(rend, infoSurface);
-
-            SDL_Rect message_rect;
-            message_rect.x = d->x + d->width;
-            message_rect.y = d->y;
-            TTF_SizeText(dvdInfoFont, str, &message_rect.w, &message_rect.h);
-
-            SDL_RenderCopy(rend, info, NULL, &message_rect);
 
             switch(dvd_is_touching_wall(d, win)){
                 case 1:

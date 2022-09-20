@@ -2,10 +2,15 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <lua.h>
 
 #define DVD_WIDTH 98
 #define DVD_HEIGHT 43
+
+#define DVD_RENDER_POSITION 1
+#define DVD_RENDER_VELOCITY 2
+#define DVD_RENDER_BOUNCE_COUNT 4
 
 extern const char* DVD_IMAGE_LOCATION;
 
@@ -18,6 +23,7 @@ typedef struct {
     double yVel;
     int bounces;
     int canMove;
+    int infoToRender;
     const char* file_name;
     SDL_Texture* texture;
     _Bool initialized;
@@ -25,6 +31,7 @@ typedef struct {
 } Dvd;
 
 void dvd_render(Dvd* dvd, SDL_Renderer* rend);
+void dvd_render_text(Dvd* dvd, SDL_Renderer* rend, TTF_Font* font);
 Dvd request_dvd_init(int x, int y, int width, int height, const char* file_name);
 void dvd_init(Dvd* dvd, SDL_Renderer* rend);
 void dvd_goto(Dvd* dvd, int x, int y);
