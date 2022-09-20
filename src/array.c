@@ -38,9 +38,10 @@ void popDvdArrayItem(DvdArray* a){
     void* mem = realloc(a->array, a->len * sizeof(Dvd));
     if(!mem){
         free(mem);
-        return 1;
     }
-    a->array = mem;
+    else{
+        a->array = mem;
+    }
 }
 
 void delDvdArray(DvdArray *a) {

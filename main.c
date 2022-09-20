@@ -75,6 +75,8 @@ void create_sdl_module_object(lua_State* L){
     lua_setfield(L, -2, "set_fps");
     lua_pushcfunction(L, sdl_background_color);
     lua_setfield(L, -2, "background");
+    lua_pushcfunction(L, sdl_render_text);
+    lua_setfield(L, -2, "render_text");
     lua_setglobal(L, "sdl");
 }
 
@@ -120,8 +122,9 @@ int main(int argc, char ** argv) {
     rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 
     TTF_Init();
-    TTF_Font* font = TTF_OpenFont("/usr/share/fonts/ubuntu/Ubuntu-M.ttf", 10);
-    if(!font){
+    TTF_Font* mainInfoFont = TTF_OpenFont("/usr/share/fonts/ubuntu/Ubuntu-M.ttf", 15);
+    TTF_Font* dvdInfoFont = TTF_OpenFont("/usr/share/fonts/ubuntu/Ubuntu-M.ttf", 10);
+    if(!mainInfoFont){
         printf("%s\n", "Font not found");
         return 1;
     }
@@ -178,7 +181,7 @@ int main(int argc, char ** argv) {
         char str[100];
         sprintf(str, "%d", dvds.used);
 
-        infoSurface = TTF_RenderText_Solid(font, str, White);
+        infoSurface = TTF_RenderText_Solid(mainInfoFont, str, White);
         info = SDL_CreateTextureFromSurface(rend, infoSurface);
 
         while(SDL_PollEvent(&event)){
@@ -238,6 +241,21 @@ int main(int argc, char ** argv) {
             dvd_render(d, rend);
             dvd_move(d);
 
+            char str[100];
+            sprintf(str, "(%.01f , %.01f )", d->x, d->y);
+
+            SDL_Surface* infoSurface;
+            SDL_Texture* info;
+            infoSurface = TTF_RenderText_Solid(dvdInfoFont, str, White);
+            info = SDL_CreateTextureFromSurface(rend, infoSurface);
+
+            SDL_Rect message_rect;
+            message_rect.x = d->x + d->width;
+            message_rect.y = d->y;
+            TTF_SizeText(dvdInfoFont, str, &message_rect.w, &message_rect.h);
+
+            SDL_RenderCopy(rend, info, NULL, &message_rect);
+
             switch(dvd_is_touching_wall(d, win)){
                 case 1:
                     d->bounces++;
@@ -271,6 +289,7 @@ int main(int argc, char ** argv) {
             }
         }
 
+        TTF_SizeText(mainInfoFont, str, &message_rect.w, &message_rect.h);
         SDL_RenderCopy(rend, info, NULL, &message_rect);
         SDL_RenderPresent(rend);
         SDL_Delay(1000 / fps);

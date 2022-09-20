@@ -5,6 +5,7 @@
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
+#include "array.h"
 #include "dvd.h"
 #include "globals.h"
 

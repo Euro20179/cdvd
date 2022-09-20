@@ -1,4 +1,6 @@
 #include <SDL2/SDL_render.h>
+#include <SDL2/SDL_surface.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_video.h>
 #include <string.h>
 #include <stdlib.h>
@@ -226,6 +228,32 @@ int sdl_background_color(lua_State* L){
     }
     SDL_SetRenderDrawColor(rend, r, g, b, a);
     return 1;
+}
+
+int sdl_render_text(lua_State *L){
+    const char* text = lua_tostring(L, 1);
+    if(text == NULL)
+        return 2;
+    const char* font = lua_tostring(L, 2);
+    if(font == NULL)
+        return 2;
+    int size = lua_tointeger(L, 3);
+    if(size == 0)
+        size = 1;
+    int x = lua_tointeger(L, 4);
+    int y = lua_tointeger(L, 5);
+    SDL_Surface* surface;
+    SDL_Texture* info;
+    TTF_Font* f = TTF_OpenFont(font, size);
+    SDL_Color white = {255, 255, 255};
+    surface = TTF_RenderText_Solid(f, text, white);
+    info = SDL_CreateTextureFromSurface(rend, surface);
+    SDL_Rect message_rect;
+    message_rect.x = x;
+    message_rect.y = y;
+    TTF_SizeText(f, text, &message_rect.w, &message_rect.h);
+
+    SDL_RenderCopy(rend, info, NULL, &message_rect);
 }
 
 int this_register_on_click(lua_State* L){
